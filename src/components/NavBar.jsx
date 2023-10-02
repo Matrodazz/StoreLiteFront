@@ -1,6 +1,21 @@
+"use client"
+
+import { AuthContext } from "@/contexts/AuthContext";
+import { useContext } from "react";
+import Button from "./Button";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 export default function NavBar({ active }) {
+  const {user, logout} = useContext(AuthContext)
+  const { push } = useRouter()
+
+  function handleLogout(){
+      logout()
+      push("/login")
+  }
+
+
   return (
     <nav className="flex justify-between items-center bg-[#160C28] py-2 px-4">
       <ul className="flex gap-14 items-end text-[#52525B]">
@@ -22,15 +37,13 @@ export default function NavBar({ active }) {
       </ul>
 
       <div className="flex items-center gap-4 ml-auto">
-        <div className="h-12 w-12 rounded-sm overflow-hidden">
-          <img src="https://i.pravatar.cc/100" alt="Avatar" />
+        <span>{user?.email}</span>
+
+        <div className="h-12 w-12 rounded-full overflow-hidden">
+          <img src="https://i.pravatar.cc/100" alt="Avatar do usuário" />
         </div>
-        <Link href="/perfil">
-        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="22" viewBox="0 0 26 22" fill="none">
-            <path d="M14 4H20M20 4V10M20 4L12 12" stroke="#52525B" stroke-width="2"/>
-            <path d="M11 5H7C5.89543 5 5 5.89543 5 7V17C5 18.1046 5.89543 19 7 19H17C18.1046 19 19 18.1046 19 17V13" stroke="#52525B" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-        </Link>
+
+        <Button onClick={handleLogout} type="button">Sair</Button>
       </div>
     </nav>
   );

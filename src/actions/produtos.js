@@ -1,6 +1,7 @@
 "use server"
 
 import { revalidatePath } from "next/cache"
+import { cookies } from "next/headers"
 
 const url = process.env.NEXT_PUBLIC_BASE_URL + "/produtos"
 
@@ -30,7 +31,15 @@ export async function create(formData){
 }
 
 export async function getProdutos() {
-    const resp = await fetch(url);
+    const token = cookies().get('storelite_token')
+
+    const options = {
+        headers: {
+            "Authorization": `Bearer ${token.value}`
+        }
+    }
+
+    const resp = await fetch(url, options)
 
     if (!resp.ok) {
         throw new Error("Erro ao obter dados dos produtos");
